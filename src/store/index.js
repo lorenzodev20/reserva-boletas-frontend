@@ -1,14 +1,12 @@
+import reservations from '@/store/reservations'
 import { createStore } from 'vuex'
 
-export default createStore({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+
+// Create a new store instance.
+const store = createStore({
+    modules:{
+        reservations
+    }
 })
+
+export default store
