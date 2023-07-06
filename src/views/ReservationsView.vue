@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <h1 class="text-center">Listado de reservaciones</h1>
-    <button type="button" class="btn btn-secondary">Nuevo</button>
+    <button
+      type="button"
+      class="btn btn-secondary"
+      data-bs-toggle="modal"
+      data-bs-target="#staticBackdrop"
+    >
+      Nuevo
+    </button>
+    <ModalNewReservation/>
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -24,7 +32,7 @@
         </tbody>
       </table>
     </div>
-    <!-- <ReservationsPaginationVue /> -->
+
     <!-- Muestra los enlaces de paginación -->
     <nav aria-label="Navigation for tables">
       <ul class="pagination justify-content-center">
@@ -67,12 +75,12 @@
 </template>
 
 <script>
-//import ReservationsPaginationVue from '@/components/ReservationsPagination.vue'
+import { defineAsyncComponent } from 'vue'
 import { mapGetters, mapActions, mapState } from 'vuex'
 
 export default {
   components: {
-    //ReservationsPaginationVue
+    ModalNewReservation: defineAsyncComponent(() => import('../components/ReservationsCreate.vue'))
   },
   computed: {
     ...mapState('reservations', ['reservations']),
@@ -89,16 +97,16 @@ export default {
   },
   methods: {
     ...mapActions('reservations', ['fetchReservations']),
-    fetchPage(page) {
-      this.fetchReservations(page);
+    fetchPage (page) {
+      this.fetchReservations(page)
     },
-    fetchPreviousPage() {
-      const prevPage = this.pagination.current_page - 1;
-      this.fetchReservations(prevPage);
+    fetchPreviousPage () {
+      const prevPage = this.pagination.current_page - 1
+      this.fetchReservations(prevPage)
     },
-    fetchNextPage() {
-      const nextPage = this.pagination.current_page + 1;
-      this.fetchReservations(nextPage);
+    fetchNextPage () {
+      const nextPage = this.pagination.current_page + 1
+      this.fetchReservations(nextPage)
     }
   },
   created () {
@@ -106,5 +114,3 @@ export default {
   }
 }
 </script>
-
-<style></style>
