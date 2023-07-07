@@ -55,14 +55,13 @@
           class="page-item"
           :class="{ active: page === pagination.current_page }"
         >
-          <a class="page-link" href="#" @click="fetchPage(page)">{{ page }}</a>
+          <a class="page-link" @click="fetchPage(page)">{{ page }}</a>
         </li>
 
         <!-- Renderiza el enlace de página siguiente -->
         <li class="page-item" :class="{ disabled: !pagination.next }">
           <a
             class="page-link"
-            href="#"
             aria-label="Next"
             @click="fetchNextPage"
           >

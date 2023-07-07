@@ -1,5 +1,5 @@
 import reservationsApi from "@/api/reservationsApi";
-
+import { reportError } from "@/helpers/utils";
 
 export const fetchCustomers = async ({ commit }, page = 1) => {
     try {
@@ -8,7 +8,7 @@ export const fetchCustomers = async ({ commit }, page = 1) => {
         const { data, meta } = response.data
 
         if (!data) {
-            commit('setReservations', [])
+            commit('setCustomers', [])
             return
         }
 
@@ -31,8 +31,32 @@ export const fetchCustomers = async ({ commit }, page = 1) => {
         commit('setCustomers', customers)
         commit('setPagination', meta);
     }catch (error) {
-        console.error('Error al cargar la información por favor revisar logs')
-        console.log(error)
-        return null
+        reportError(error)
+        return error.response
+    }
+}
+
+export const savedCustomer = async ({commit}, customer) => {
+    try {
+        const {identification, first_name, last_name, phone_number} = customer
+        const newCustomer= {
+            identification,
+            first_name,
+            last_name,
+            phone_number
+        }
+        const { data } = await reservationsApi.post('/api/v1/customers',newCustomer)
+        const dataNew= {
+            "id": data.data.id,
+            identification,
+            first_name,
+            last_name,
+            phone_number,
+        }
+        commit('addCustomer',dataNew)
+        return data;
+    }catch (error){
+        reportError(error)
+        return error.response
     }
 }

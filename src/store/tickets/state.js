@@ -1,6 +1,6 @@
 export default () => ({
     isLoading: true,
-    customers: [],
+    tickets: [],
     pagination: {},
     showErrors: false,
     errors: []

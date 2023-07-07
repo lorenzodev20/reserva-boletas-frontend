@@ -20,6 +20,15 @@
           ></button>
         </div>
         <div class="modal-body">
+          <div v-show="showErrors">
+            <div class="form-text text-danger">
+              <p>No se ha logrado guardar el registro</p>
+              <ul>
+                <li v-for="(item, index) in errors" :key="index"> {{item}} </li>
+              </ul>
+            </div>
+            <hr>
+          </div>
           <div class="mb-3">
             <label for="identification" class="form-label">Número de Identificación</label>
             <input  v-model="customer.identification" type="text" class="form-control" id="identification" placeholder="1.123.123.226" >
@@ -39,6 +48,7 @@
         </div>
         <div class="modal-footer">
           <button
+              ref="boton-close"
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
@@ -53,6 +63,8 @@
   </div>
 </template>
 <script>
+import {mapMutations, mapState} from "vuex";
+
 export default {
   data(){
     return{
@@ -64,6 +76,10 @@ export default {
       }
     }
   },
+  computed:{
+    ...mapState('customers',['showErrors','errors']),
+    ...mapMutations('customers',['changeShowErrorValue','cleanErrors'])
+  },
   methods:{
     saveCustomer(){
       this.$emit('saved-customer',this.customer)
@@ -73,9 +89,19 @@ export default {
       this.customer.first_name = ''
       this.customer.last_name = ''
       this.customer.phone_number = ''
+      this.changeShowErrorValue
+      this.cleanErrors
+    },
+    closeButton(){
+      this.cleanInput()
+      this.$refs["boton-close"].click()
     }
   }
 }
 </script>
 
-<style></style>
+<style scoped>
+.text-danger{
+  color: darkred;
+}
+</style>
