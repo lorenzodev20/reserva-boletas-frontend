@@ -29,7 +29,25 @@ export const fetchTickets = async ({ commit }, page = 1) => {
         // Actualiza el estado de los tickets y la paginación utilizando mutaciones
         commit('setTickets', tickets)
         commit('setPagination', meta);
-    }catch (error) {
+    } catch (error) {
+        reportError(error)
+        return error.response
+    }
+}
+
+export const saveTicket = async ({ commit }, ticket) => {
+    try {
+        const { title, description, stock } = ticket
+        const { data } = await reservationsApi.post('/api/v1/tickets', { title, description, stock })
+        const dataNew = {
+            "id": data.data.id,
+            title,
+            description,
+            stock
+        }
+        commit('addTicket', dataNew)
+        return data;
+    } catch (error) {
         reportError(error)
         return error.response
     }

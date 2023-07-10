@@ -9,6 +9,7 @@
     >
       Nuevo
     </button>
+    <TicketCreate ref="close-button" @saved-ticket="savedTicket" />
     <div class="table-responsive">
       <table class="table">
         <thead>
@@ -65,9 +66,15 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
 import { mapActions, mapGetters, mapMutations, mapState } from 'vuex'
 
 export default {
+  components: {
+    TicketCreate: defineAsyncComponent(() =>
+      import('../components/TicketCreate.vue')
+    )
+  },
   computed: {
     ...mapState('tickets', ['tickets', 'showErrors', 'errors']),
     ...mapGetters('tickets', ['getTickets', 'getPagination']),
@@ -88,17 +95,41 @@ export default {
     }
   },
   methods: {
-    ...mapActions('tickets', ['fetchTickets']),
+    ...mapActions('tickets', ['fetchTickets', 'saveTicket']),
     fetchPage (page) {
       this.fetchTickets(page)
     },
     fetchPreviousPage () {
-      const prevPage = this.pagination.current_page ? this.pagination.current_page - 1 : 1
+      const prevPage = this.pagination.current_page
+        ? this.pagination.current_page - 1
+        : 1
       this.fetchTickets(prevPage)
     },
     fetchNextPage () {
-      const nextPage = this.pagination.current_page ? this.pagination.current_page + 1 : 1
+      const nextPage = this.pagination.current_page
+        ? this.pagination.current_page + 1
+        : 1
       this.fetchTickets(nextPage)
+    },
+    async savedTicket (ticket) {
+      const { title, description, stock } = ticket
+      const response = await this.saveTicket({ title, description, stock })
+      if (response.result) {
+        alert('Registro guardado correctamente!')
+        this.fetchTickets(1)
+        this.$refs['close-button'].closeButton()
+      } else {
+        this.cleanErrors
+        const { errors } = response.data
+        if (errors) {
+          for (let id of Object.keys(errors)) {
+            for (const msg of errors[id]) {
+              this.errors.push(msg)
+            }
+          }
+          this.changeShowErrorValue
+        }
+      }
     }
   },
   created () {
