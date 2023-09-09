@@ -1,7 +1,8 @@
 export default () => ({
-    isLoading: true,
+    isLoading: false,
     tickets: [],
     pagination: {},
     showErrors: false,
-    errors: []
+    errors: [],
+    ticketsList:[]
 })

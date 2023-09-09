@@ -3,5 +3,6 @@ export default () => ({
     customers: [],
     pagination: {},
     showErrors: false,
-    errors: []
+    errors: [],
+    customersList:[]
 })

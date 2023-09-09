@@ -60,3 +60,34 @@ export const savedCustomer = async ({commit}, customer) => {
         return error.response
     }
 }
+
+export const fetchCustomersList = async ({ commit }) => {
+    try {
+        const url = `/api/v1/customers/get-list`;
+        const response = await reservationsApi.get(url);
+        const { data } = response.data
+
+        if (!data) {
+            commit('setCustomersList', [])
+            return
+        }
+
+        const customers = []
+
+        for (let id of Object.keys(data)) {
+
+            let value = {
+                "id": data[id].id,
+                "identification": data[id].identification,
+                "full_name": data[id].full_name,
+            }
+            customers.push(value)
+
+        }
+
+        commit('setCustomersList', customers)
+    }catch (error) {
+        reportError(error)
+        return error.response
+    }
+}

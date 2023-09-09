@@ -1,11 +1,7 @@
 import axios from 'axios'
 
-const PATH = [
-    'http://reserva-boletas-backend.test:8088'
-];
+const apiUrl = process.env.VUE_APP_BACKEND_URL
 
-const reservationsApi = axios.create({
-    baseURL: PATH[0]
-})
+const reservationsApi = axios.create({ baseURL: apiUrl })
 
 export default reservationsApi
