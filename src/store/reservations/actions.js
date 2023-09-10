@@ -36,3 +36,21 @@ export const fetchReservations = async ({ commit }, page = 1) => {
         return null
     }
 }
+
+export const storeReservation = async ({ commit }, reservation) => {
+    try {
+        const { quantity, customer_id, ticket_id } = reservation
+        const { data } = await reservationsApi.post('/api/v1/reservations', { quantity, customer_id, ticket_id })
+        /* const dataNew = {
+            "id": data.data.id,
+            title,
+            description,
+            stock
+        }
+        commit('addTicket', dataNew) */
+        return data;
+    } catch (error) {
+        reportError(error)
+        return error.response
+    }
+}

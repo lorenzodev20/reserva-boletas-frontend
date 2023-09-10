@@ -73,13 +73,18 @@
         </div>
         <div class="modal-footer">
           <button
+            ref="boton-close"
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
           >
             Cerrar
           </button>
-          <button type="button" class="btn btn-primary">Guardar</button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            @click="saveReservation"
+          >Guardar</button>
         </div>
       </div>
     </div>
@@ -110,10 +115,31 @@ export default {
     }
   },
   methods: {
-    ...mapActions('tickets', ['getTicketsList'])
-  },
-  created () {
-    // TO-DO:code here
+    ...mapActions('tickets', ['getTicketsList']),
+    cleanInput () {
+      this.reservation.quantity = 0
+      this.reservation.customer_id = ''
+      this.reservation.ticket_id = ''
+    },
+    closeButton () {
+      this.cleanInput()
+      this.$refs['boton-close'].click()
+    },
+    saveReservation(){
+      if (this.reservation.customer_id == 0) {
+        alert('Debes seleccionar un cliente')
+        return
+      }
+      if (this.reservation.ticket_id == 0) {
+        alert('Debes seleccionar una Boleta')
+        return
+      }
+      if (this.reservation.quantity <= 0) {
+        alert('La cantidad debe ser mayo a 0')
+        return
+      }
+      this.$emit('saved-reservation',this.reservation)
+    }
   }
 }
 </script>

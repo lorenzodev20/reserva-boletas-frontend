@@ -9,7 +9,7 @@
     >
       Nuevo
     </button>
-    <ModalNewReservation />
+    <ModalNewReservation ref="close-button" @saved-reservation="saveReservation" />
     <div v-show="showReservations">
       <div class="table-responsive">
         <table class="table">
@@ -101,7 +101,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('reservations', ['fetchReservations']),
+    ...mapActions('reservations', ['fetchReservations','storeReservation']),
     ...mapActions('tickets', ['getTicketsList']),
     ...mapActions('customers', ['fetchCustomersList']),
     fetchPage (page) {
@@ -114,6 +114,13 @@ export default {
     fetchNextPage () {
       const nextPage = this.pagination.current_page + 1
       this.fetchReservations(nextPage)
+    },
+    async saveReservation(reservation){
+      const response = await this.storeReservation(reservation);
+      if (response.result) {
+        alert('Reservación creada!')
+        this.$refs['close-button'].closeButton()
+      }
     }
   },
   created () {
